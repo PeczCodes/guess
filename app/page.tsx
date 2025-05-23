@@ -46,7 +46,10 @@ const Page = () => {
 				setPreviousGuess(currentGuess);
 				setCurrentGuess("");
 				
-				if (solution === currentGuess || newGuesses.every((val) => val !== null)) {
+				if (
+					solution === currentGuess ||
+					newGuesses.every((val) => val !== null)
+				) {
 					setGameOver(true);
 				}
 				return;
@@ -58,7 +61,6 @@ const Page = () => {
 				return;
 			}
 			
-			// Skip typing letters on mobile — handled by <input>
 			if (!isTouchDevice && isLetter && currentGuess.length < wordLength) {
 				setCurrentGuess((old) => (old + e.key).toUpperCase());
 			}
@@ -76,10 +78,10 @@ const Page = () => {
 	};
 	
 	const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
-		const val = (e.target as HTMLInputElement).value.toUpperCase();
-		if (/^[A-Z]{0,5}$/.test(val)) {
-			setCurrentGuess(val);
-		}
+		const val = (e.target as HTMLInputElement).value
+			.toUpperCase()
+			.replace(/[^A-Z]/g, "");
+		setCurrentGuess(val.slice(0, wordLength));
 	};
 	
 	return (
@@ -102,11 +104,11 @@ const Page = () => {
 				<input
 					ref={inputRef}
 					type="text"
-					inputMode="text"
+					inputMode={gameOver ? "none" : "text"}
 					autoComplete="off"
 					autoCorrect="off"
 					spellCheck="false"
-					className="absolute opacity-0 pointer-events-none w-0 h-0"
+					className="absolute left-[-9999px]"
 					value={currentGuess}
 					onInput={handleInput}
 				/>
