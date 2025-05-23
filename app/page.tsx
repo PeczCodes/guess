@@ -51,9 +51,10 @@ const Page = () => {
 				}
 				return;
 			}
-			
 			if (e.key === "Backspace") {
-				setCurrentGuess((old) => old.slice(0, -1));
+				if (!isTouchDevice) {
+					setCurrentGuess((old) => old.slice(0, -1));
+				}
 				return;
 			}
 			
