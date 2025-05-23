@@ -30,13 +30,12 @@ const Page = () => {
 	}, []);
 	
 	useEffect(() => {
-		const isTouchDevice =
-			"ontouchstart" in window || navigator.maxTouchPoints > 0;
-		
 		const handleType = (e: KeyboardEvent) => {
-			if (isTouchDevice || gameOver) return;
+			if (gameOver) return;
 			
 			const isLetter = /^[a-zA-Z]$/.test(e.key);
+			const isTouchDevice =
+				"ontouchstart" in window || navigator.maxTouchPoints > 0;
 			
 			if (e.key === "Enter") {
 				if (currentGuess.length !== wordLength) return;
@@ -58,7 +57,8 @@ const Page = () => {
 				return;
 			}
 			
-			if (isLetter && currentGuess.length < wordLength) {
+			// Skip typing letters on mobile — handled by <input>
+			if (!isTouchDevice && isLetter && currentGuess.length < wordLength) {
 				setCurrentGuess((old) => (old + e.key).toUpperCase());
 			}
 		};
@@ -82,7 +82,7 @@ const Page = () => {
 	};
 	
 	return (
-		<div className="h-100vh overflow-clip">
+		<>
 			<Link
 				href="/help"
 				className="py-1 px-2 border-1 border-black dark:border-white rounded absolute right-[2rem] top-[2rem] hover:bg-amber-300 hover:text-black transition duration-200  w-[4rem] grid place-items-center"
@@ -142,7 +142,7 @@ const Page = () => {
 					</div>
 				)}
 			</div>
-		</div>
+		</>
 	);
 };
 
