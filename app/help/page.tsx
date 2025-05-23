@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Page = () => {
 	return (
-		<>
+		<div className="h-100vh overflow-clip p-2">
 			<Link href="/" className="py-1 px-2 border-1 border-black dark:border-white rounded absolute right-[2rem] top-[2rem] hover:bg-amber-300 hover:text-white transition duration-200  dark:hover:text-black w-[4rem] grid place-items-center" >GAME</Link>
 			<div className="grid gap-4">
 				<div>
@@ -61,7 +61,7 @@ const Page = () => {
 					</ul>
 				</div>
 			</div>
-		</>
+		</div>
 		
 	
 	);
