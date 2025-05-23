@@ -82,7 +82,7 @@ const Page = () => {
 	};
 	
 	return (
-		<>
+		<div className="h-100vh overflow-clip p-2">
 			<Link
 				href="/help"
 				className="py-1 px-2 border-1 border-black dark:border-white rounded absolute right-[2rem] top-[2rem] hover:bg-amber-300 hover:text-black transition duration-200  w-[4rem] grid place-items-center"
@@ -142,7 +142,7 @@ const Page = () => {
 					</div>
 				)}
 			</div>
-		</>
+		</div>
 	);
 };
 
