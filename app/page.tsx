@@ -15,12 +15,13 @@ const Page = () => {
 	const [currentGuess, setCurrentGuess] = useState<string>("");
 	const [gameOver, setGameOver] = useState<boolean>(false);
 	const [previousGuess, setPreviousGuess] = useState<string>("");
-	const inputRef = useRef<HTMLInputElement | null>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
 	
 	const fetchWord = async () => {
 		const response = await fetch(api);
 		const words = await response.json();
-		const randomWord = words[Math.floor(Math.random() * words.length)].toUpperCase();
+		const randomWord =
+			words[Math.floor(Math.random() * words.length)].toUpperCase();
 		setSolution(randomWord);
 	};
 	
@@ -29,8 +30,11 @@ const Page = () => {
 	}, []);
 	
 	useEffect(() => {
+		const isTouchDevice =
+			"ontouchstart" in window || navigator.maxTouchPoints > 0;
+		
 		const handleType = (e: KeyboardEvent) => {
-			if (gameOver) return;
+			if (isTouchDevice || gameOver) return;
 			
 			const isLetter = /^[a-zA-Z]$/.test(e.key);
 			
@@ -46,7 +50,6 @@ const Page = () => {
 				if (solution === currentGuess || newGuesses.every((val) => val !== null)) {
 					setGameOver(true);
 				}
-				
 				return;
 			}
 			
@@ -69,11 +72,13 @@ const Page = () => {
 		setCurrentGuess("");
 		setGameOver(false);
 		fetchWord();
-		inputRef.current?.focus();
 	};
 	
-	const focusInput = () => {
-		inputRef.current?.focus();
+	const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
+		const val = (e.target as HTMLInputElement).value.toUpperCase();
+		if (/^[A-Z]{0,5}$/.test(val)) {
+			setCurrentGuess(val);
+		}
 	};
 	
 	return (
@@ -85,14 +90,14 @@ const Page = () => {
 				HELP
 			</Link>
 			
-			<div className="flex flex-col items-center gap-4 mt-8">
+			{/* Tap to Start Button */}
+			<div className="w-full text-center my-4">
 				<button
-					onClick={focusInput}
-					className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+					onClick={() => inputRef.current?.focus()}
+					className="px-4 py-2 bg-emerald-500 text-white rounded hover:bg-emerald-600 transition"
 				>
 					Tap to Start
 				</button>
-				
 				<input
 					ref={inputRef}
 					type="text"
@@ -102,15 +107,12 @@ const Page = () => {
 					spellCheck="false"
 					className="absolute opacity-0 pointer-events-none w-0 h-0"
 					value={currentGuess}
-					onChange={(e) => {
-						const val = e.target.value.toUpperCase();
-						if (/^[A-Z]{0,5}$/.test(val)) {
-							setCurrentGuess(val);
-						}
-					}}
+					onInput={handleInput}
 				/>
-				
-				<div className="board flex gap-[5px] flex-col mt-4">
+			</div>
+			
+			<div className="flex flex-col items-center gap-4">
+				<div className="board flex gap-[5px] flex-col">
 					{guesses.map((guess, idx) => {
 						const isCurrentGuess = idx === guesses.findIndex((val) => val == null);
 						return (
