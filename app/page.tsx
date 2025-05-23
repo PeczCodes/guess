@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import {Line} from "@/app/line";
+import React, { useEffect, useRef, useState } from "react";
+import { Line } from "@/app/line";
 import Link from "next/link";
 
 const api = "/api";
@@ -9,10 +9,13 @@ const maxGuesses = 6;
 
 const Page = () => {
 	const [solution, setSolution] = useState<string>("");
-	const [guesses, setGuesses] = useState<(string | null)[]>(Array(maxGuesses).fill(null));
+	const [guesses, setGuesses] = useState<(string | null)[]>(
+		Array(maxGuesses).fill(null)
+	);
 	const [currentGuess, setCurrentGuess] = useState<string>("");
 	const [gameOver, setGameOver] = useState<boolean>(false);
 	const [previousGuess, setPreviousGuess] = useState<string>("");
+	const inputRef = useRef<HTMLInputElement | null>(null);
 	
 	const fetchWord = async () => {
 		const response = await fetch(api);
@@ -40,11 +43,10 @@ const Page = () => {
 				setPreviousGuess(currentGuess);
 				setCurrentGuess("");
 				
-				if (solution === currentGuess) {
-					setGameOver(true);
-				} else if (newGuesses.every((val) => val !== null)) {
+				if (solution === currentGuess || newGuesses.every((val) => val !== null)) {
 					setGameOver(true);
 				}
+				
 				return;
 			}
 			
@@ -67,13 +69,48 @@ const Page = () => {
 		setCurrentGuess("");
 		setGameOver(false);
 		fetchWord();
+		inputRef.current?.focus();
+	};
+	
+	const focusInput = () => {
+		inputRef.current?.focus();
 	};
 	
 	return (
 		<>
-			<Link href="/help" className="py-1 px-2 border-1 border-black dark:border-white rounded absolute right-[2rem] top-[2rem] hover:bg-amber-300 hover:text-black transition duration-200  w-[4rem] grid place-items-center" >HELP</Link>
-			<div className="flex flex-col items-center gap-4">
-				<div className="board flex gap-[5px] flex-col">
+			<Link
+				href="/help"
+				className="py-1 px-2 border-1 border-black dark:border-white rounded absolute right-[2rem] top-[2rem] hover:bg-amber-300 hover:text-black transition duration-200  w-[4rem] grid place-items-center"
+			>
+				HELP
+			</Link>
+			
+			<div className="flex flex-col items-center gap-4 mt-8">
+				<button
+					onClick={focusInput}
+					className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+				>
+					Tap to Start
+				</button>
+				
+				<input
+					ref={inputRef}
+					type="text"
+					inputMode="text"
+					autoComplete="off"
+					autoCorrect="off"
+					spellCheck="false"
+					className="absolute opacity-0 pointer-events-none w-0 h-0"
+					value={currentGuess}
+					onChange={(e) => {
+						const val = e.target.value.toUpperCase();
+						if (/^[A-Z]{0,5}$/.test(val)) {
+							setCurrentGuess(val);
+						}
+					}}
+				/>
+				
+				<div className="board flex gap-[5px] flex-col mt-4">
 					{guesses.map((guess, idx) => {
 						const isCurrentGuess = idx === guesses.findIndex((val) => val == null);
 						return (
@@ -104,10 +141,7 @@ const Page = () => {
 				)}
 			</div>
 		</>
-		
 	);
 };
-
-
 
 export default Page;
