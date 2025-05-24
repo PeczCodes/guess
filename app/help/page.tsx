@@ -43,7 +43,7 @@ const Page = () => {
 						After a round ends (win or lose), a{" "}
 						<span className="font-mono bg-amber-300 py-1 px-2 rounded dark:text-black">Play Again</span>{" "}
 						button appears. Click it to play a new word! or click the <span className="font-mono bg-amber-300 py-1 px-2 rounded dark:text-black">Restart</span>
-						 button to restart before the round ends if you've given up 😉
+						 button to restart before the round ends if you have given up 😉
 					</p>
 				</div>
 				
