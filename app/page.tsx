@@ -2,6 +2,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Line } from "@/app/line";
 import Link from "next/link";
+import clsx from "clsx";
+import Title from "@/app/title";
 
 const api = "/api";
 const wordLength = 5;
@@ -9,9 +11,7 @@ const maxGuesses = 6;
 
 const Page = () => {
 	const [solution, setSolution] = useState<string>("");
-	const [guesses, setGuesses] = useState<(string | null)[]>(
-		Array(maxGuesses).fill(null)
-	);
+	const [guesses, setGuesses] = useState<(string | null)[]>(Array(maxGuesses).fill(null));
 	const [currentGuess, setCurrentGuess] = useState<string>("");
 	const [gameOver, setGameOver] = useState<boolean>(false);
 	const [previousGuess, setPreviousGuess] = useState<string>("");
@@ -20,8 +20,7 @@ const Page = () => {
 	const fetchWord = async () => {
 		const response = await fetch(api);
 		const words = await response.json();
-		const randomWord =
-			words[Math.floor(Math.random() * words.length)].toUpperCase();
+		const randomWord = words[Math.floor(Math.random() * words.length)].toUpperCase();
 		setSolution(randomWord);
 	};
 	
@@ -29,43 +28,37 @@ const Page = () => {
 		fetchWord();
 	}, []);
 	
+	const submitGuess = () => {
+		if (currentGuess.length !== wordLength) return;
+		const newGuesses = [...guesses];
+		newGuesses[guesses.findIndex((val) => val == null)] = currentGuess;
+		setGuesses(newGuesses);
+		setPreviousGuess(currentGuess);
+		setCurrentGuess("");
+		if (solution === currentGuess || newGuesses.every((val) => val !== null)) {
+			setGameOver(true);
+		}
+	};
+	
+	const handleKey = (key: string) => {
+		if (gameOver) return;
+		if (key === "ENTER") return submitGuess();
+		if (key === "DEL") return setCurrentGuess((old) => old.slice(0, -1));
+		if (/^[A-Z]$/.test(key) && currentGuess.length < wordLength) {
+			setCurrentGuess((old) => (old + key).toUpperCase());
+		}
+	};
+	
 	useEffect(() => {
 		const handleType = (e: KeyboardEvent) => {
-			if (gameOver) return;
-			
 			const isLetter = /^[a-zA-Z]$/.test(e.key);
-			const isTouchDevice =
-				"ontouchstart" in window || navigator.maxTouchPoints > 0;
-			
-			if (e.key === "Enter") {
-				if (currentGuess.length !== wordLength) return;
-				
-				const newGuesses = [...guesses];
-				newGuesses[guesses.findIndex((val) => val == null)] = currentGuess;
-				setGuesses(newGuesses);
-				setPreviousGuess(currentGuess);
-				setCurrentGuess("");
-				
-				if (
-					solution === currentGuess ||
-					newGuesses.every((val) => val !== null)
-				) {
-					setGameOver(true);
-				}
-				return;
-			}
-			if (e.key === "Backspace") {
-				if (!isTouchDevice) {
-					setCurrentGuess((old) => old.slice(0, -1));
-				}
-				return;
-			}
-			
-			if (!isTouchDevice && isLetter && currentGuess.length < wordLength) {
+			if (gameOver) return;
+			if (e.key === "Enter") return submitGuess();
+			if (e.key === "Backspace") return setCurrentGuess((old) => old.slice(0, -1));
+			if (isLetter && currentGuess.length < wordLength) {
 				setCurrentGuess((old) => (old + e.key).toUpperCase());
 			}
 		};
-		
 		window.addEventListener("keydown", handleType);
 		return () => window.removeEventListener("keydown", handleType);
 	}, [currentGuess, gameOver, guesses, solution]);
@@ -78,56 +71,88 @@ const Page = () => {
 	};
 	
 	const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
-		const val = (e.target as HTMLInputElement).value
-			.toUpperCase()
-			.replace(/[^A-Z]/g, "");
-		setCurrentGuess(val.slice(0, wordLength));
+		const val = (e.target as HTMLInputElement).value.toUpperCase();
+		if (/^[A-Z]{0,5}$/.test(val)) {
+			setCurrentGuess(val);
+		}
 	};
 	
 	return (
-		<div className="h-100vh overflow-clip p-2">
-			<Link
-				href="/help"
-				className="py-1 px-2 border-1 border-black dark:border-white rounded absolute right-[2rem] top-[2rem] hover:bg-amber-300 hover:text-black transition duration-200  w-[4rem] grid place-items-center"
-			>
-				HELP
-			</Link>
+		<div className="h-100vh w-100vw overflow-clip p-2">
+			<Link href="/help" className="py-1 px-2 bg-amber-300 rounded fixed right-[1rem] top-[1rem] hover:bg-amber-300 grid place-items-center">RULES</Link>
+			<Title classname="absolute top-[4rem] left-[50%] -translate-x-[50%] text-6xl md:top-[1rem]" />
+			{guesses.filter(guess => guess !== null).length > 0 && (
+				<button onClick={restartGame} className="py-1 px-2 border-1 border-black dark:border-white rounded absolute left-[2rem] top-[2rem] hover:bg-amber-300 hover:text-black transition duration-200 grid place-items-center">Restart</button>
+			)}
 			
-			{/* Tap to Start Button */}
 			<div className="w-full text-center my-4">
-				<button
-					onClick={() => inputRef.current?.focus()}
-					className="px-4 py-2 bg-emerald-500 text-white rounded hover:bg-emerald-600 transition"
-				>
-					Tap to Start
-				</button>
 				<input
 					ref={inputRef}
 					type="text"
-					inputMode={gameOver ? "none" : "text"}
+					inputMode="text"
 					autoComplete="off"
 					autoCorrect="off"
 					spellCheck="false"
-					className="absolute left-[-9999px]"
+					className="absolute opacity-0 pointer-events-none w-0 h-0"
 					value={currentGuess}
 					onInput={handleInput}
 				/>
 			</div>
 			
 			<div className="flex flex-col items-center gap-4">
-				<div className="board flex gap-[5px] flex-col">
+				<div className="relative board flex gap-[5px] flex-col">
 					{guesses.map((guess, idx) => {
 						const isCurrentGuess = idx === guesses.findIndex((val) => val == null);
-						return (
-							<Line
-								key={idx}
-								guess={isCurrentGuess ? currentGuess : guess ?? ""}
-								isFinal={!isCurrentGuess && guess !== null}
-								solution={solution}
-							/>
-						);
+						return isCurrentGuess && !gameOver? (
+							<div key={idx} className="flex items-center">
+								<div className="text-2xl -left-[2rem] top-[1rem] absolute animate-bounce text-amber-400">👉</div>
+								<div className={clsx("flex items-center gap-2")}>
+									<Line guess={isCurrentGuess ? currentGuess : guess ?? ""} isFinal={!isCurrentGuess && guess !== null} solution={solution}/>
+								</div>
+							</div>
+						) :
+							(
+								<div key={idx} className={clsx("flex items-center gap-2")}>
+									<Line guess={isCurrentGuess ? currentGuess : guess ?? ""} isFinal={!isCurrentGuess && guess !== null} solution={solution}/>
+								</div>
+							)
 					})}
 				</div>
+				
+				{!gameOver && (
+					<div className="keyboard mt-6 grid gap-2">
+						{["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"].map((row, rowIndex) => (
+							<div key={rowIndex} className="flex justify-center gap-1">
+								{row.split("").map((char) => (
+									<button
+										key={char}
+										onClick={() => handleKey(char)}
+										className={clsx("px-[2.5vw] py-2 bg-gray-300 rounded text-black hover:bg-gray-300")}
+									>
+										{char}
+									</button>
+								))}
+								{rowIndex === 2 && (
+									<>
+										<button
+											onClick={() => handleKey("DEL")}
+											className="px-2 py-2 bg-red-300 rounded text-black hover:bg-red-400"
+										>
+											DEL
+										</button>
+										<button
+											onClick={() => handleKey("ENTER")}
+											className="px-1 py-2 bg-green-300 rounded text-black hover:bg-green-400"
+										>
+											ENTER
+										</button>
+									</>
+								)}
+							</div>
+						))}
+					</div>
+				)}
+				
 				
 				{gameOver && (
 					<div className="text-center mt-4">

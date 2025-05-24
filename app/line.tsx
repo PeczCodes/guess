@@ -23,7 +23,7 @@ export function Line({guess, isFinal, solution}: { guess: string; isFinal: boole
 				key={i}
 				className={clsx(
 					className,
-					"w-[15vw] h-[15vw] md:w-[100px] md:h-[100px] rounded-2xl border border-black dark:border-white grid place-items-center text-6xl uppercase"
+					"w-[13vw] h-[13vw] md:w-[100px] md:h-[100px] rounded-2xl border border-black dark:border-white grid place-items-center text-3xl uppercase"
 				)}
 			>
 				{char}

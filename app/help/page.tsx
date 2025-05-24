@@ -3,8 +3,8 @@ import Link from "next/link";
 
 const Page = () => {
 	return (
-		<div className="h-100vh overflow-clip p-2">
-			<Link href="/" className="py-1 px-2 border-1 border-black dark:border-white rounded absolute right-[2rem] top-[2rem] hover:bg-amber-300 hover:text-white transition duration-200  dark:hover:text-black w-[4rem] grid place-items-center" >GAME</Link>
+		<div className="p-5">
+			<Link href="/" className="py-1 px-2 bg-gray-300 rounded fixed right-[1rem] top-[1rem] hover:bg-amber-300 w-[4rem] grid place-items-center">PLAY</Link>
 			<div className="grid gap-4">
 				<div>
 					<h2 className="text-2xl font-bold mb-2">🎮 How to Play</h2>
@@ -14,20 +14,18 @@ const Page = () => {
 				<div>
 					<h3 className="text-xl font-semibold mb-1">🧩 Game Rules</h3>
 					<ul className="list-disc list-inside space-y-1">
-						<li>Type letters using your keyboard.</li>
-						<li>Only alphabet letters (A–Z) are allowed.</li>
-						<li>Use <span className="font-mono bg-amber-300 py-1 px-2 rounded dark:text-black" >Backspace</span> to delete the last letter.</li>
-						<li>Press <span className="font-mono bg-amber-300 py-1 px-2 rounded dark:text-black">Enter</span> to submit a guess after 5 letters.</li>
-						<li>Each guess must be a valid 5-letter word.</li>
+						<li>Type letters using the keyboard.</li>
+						<li>Use <span className="font-mono bg-amber-300 py-1 px-2 rounded dark:text-black" >DEL</span> to delete the last letter.</li>
+						<li>Press <span className="font-mono bg-amber-300 py-1 px-2 rounded dark:text-black">ENTER</span> to submit a guess after 5 letters.</li>
 					</ul>
 				</div>
 				
 				<div>
 					<h3 className="text-xl font-semibold mb-1">⬛️ Tile Colors Explained</h3>
 					<ul className="list-disc list-inside space-y-1">
-						<li><span className="text-green-600 font-semibold">🟩 Green</span>: Correct letter in the correct position</li>
-						<li><span className="text-yellow-500 font-semibold">🟨 Yellow</span>: Correct letter, wrong position</li>
-						<li><span className="text-red-500 font-semibold">🟥 Red</span>: Letter is not in the word</li>
+						<li><span className="text-green-600 font-semibold">🟩</span> Letter in word and in the correct position</li>
+						<li><span className="text-yellow-500 font-semibold">🟨</span> Letter in word but in the wrong position</li>
+						<li><span className="text-red-500 font-semibold">🟥</span> Letter is not in the word</li>
 					</ul>
 				</div>
 				
@@ -44,7 +42,8 @@ const Page = () => {
 					<p>
 						After a round ends (win or lose), a{" "}
 						<span className="font-mono bg-amber-300 py-1 px-2 rounded dark:text-black">Play Again</span>{" "}
-						button appears. Click it to play a new word!
+						button appears. Click it to play a new word! or click the <span className="font-mono bg-amber-300 py-1 px-2 rounded dark:text-black">Restart</span>
+						 button to restart before the round ends if you've given up 😉
 					</p>
 				</div>
 				
