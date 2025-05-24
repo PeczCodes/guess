@@ -157,16 +157,15 @@ const Page = () => {
 		const isNowCorrect = previousGuess === solution;
 		
 		if (isNowCorrect && !hasPlayedConfetti) {
-			const duration = 3000;
+			const duration = 2000;
 			const end = Date.now() + duration;
 			
 			(function frame() {
 				confetti({
-					particleCount: 50,
+					particleCount: 30,
 					startVelocity: 30,
 					spread: 360,
-					ticks: 100,
-					gravity: 1,
+					ticks: 50,
 					origin: {
 						x: Math.random(),
 						y: Math.random() * 0.5,
