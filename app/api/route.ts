@@ -13,7 +13,6 @@ const openai = new OpenAI({
 });
 
 
-
 const fetchWords = async() => {
 	const response = await fetch(api)
 	return await response.json()
@@ -31,9 +30,6 @@ export async function GET(){
 		})
 	}
 }
-
-
-
 
 export async function POST(req: Request){
 	try {

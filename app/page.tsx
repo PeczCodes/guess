@@ -1,26 +1,44 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { Line } from "@/app/line";
-import Link from "next/link";
+import React, {useEffect, useRef, useState} from "react";
+import { Line } from "@/components/line";
 import clsx from "clsx";
-import Title from "@/app/title";
+import Title from "@/components/title";
 import { motion, AnimatePresence } from "framer-motion";
+import Help from "@/components/help";
+import confetti from 'canvas-confetti';
+import Keyboard from "@/components/keyboard";
+import PlayAgain from "@/components/playAgain";
+import Footer from "@/components/footer";
 
 
 const api = "/api";
 const wordLength = 5;
 const maxGuesses = 6;
 
+function usePrevious<T>(value: T): T | undefined {
+	const ref = useRef<T>(undefined);
+	useEffect(() => {
+		ref.current = value;
+	}, [value]);
+	return ref.current;
+}
+
+
+type pages = "game" | "help"
+
 const Page = () => {
+	const [page, setPage] = useState<pages>("game");
 	const [solution, setSolution] = useState<string>("");
 	const [guesses, setGuesses] = useState<(string | null)[]>(Array(maxGuesses).fill(null));
 	const [currentGuess, setCurrentGuess] = useState<string>("");
 	const [gameOver, setGameOver] = useState<boolean>(false);
 	const [previousGuess, setPreviousGuess] = useState<string>("");
-	const inputRef = useRef<HTMLInputElement>(null);
 	const [hint, setHint] = useState<string>("");
 	const [showHint, setShowHint] = useState<boolean>(false);
 	const [hasFetchedHint, setHasFetchedHint] = useState(false);
+	const prevGuess = usePrevious(previousGuess);
+	const hasMounted = useRef(false);
+	const [hasPlayedConfetti, setHasPlayedConfetti] = useState(false);
 	
 	
 	const fetchWord = async () => {
@@ -28,6 +46,13 @@ const Page = () => {
 		const words = await response.json();
 		const randomWord = words[Math.floor(Math.random() * words.length)].toUpperCase();
 		setSolution(randomWord);
+		await fetch("/api/solution", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(randomWord),
+		})
 	};
 	
 	
@@ -50,6 +75,14 @@ const Page = () => {
 		}
 	}, [guesses, solution, hint, hasFetchedHint]);
 	
+	function scrambleWord(word: string): string {
+		const letters = word.split('');
+		for (let i = letters.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[letters[i], letters[j]] = [letters[j], letters[i]];
+		}
+		return letters.join('' + ', ');
+	}
 	
 	const fetchHint = async (currentSolution: string) => {
 		try {
@@ -62,8 +95,9 @@ const Page = () => {
 			});
 			
 			const res = await hintResponse.json();
-			setHint(res.message);
-			setShowHint(true);
+			
+			setHint(res.error ? scrambleWord(solution) : res.message);
+			setShowHint(true)
 			
 			// hide hint after 5 seconds
 			const timer = setTimeout(() => {
@@ -77,10 +111,6 @@ const Page = () => {
 			console.error("Error fetching hint:", error);
 		}
 	};
-	
-	
-	
-	
 	
 	const submitGuess = () => {
 		if (currentGuess.length !== wordLength) return;
@@ -128,127 +158,108 @@ const Page = () => {
 	};
 	
 	
-	const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
-		const val = (e.target as HTMLInputElement).value.toUpperCase();
-		if (/^[A-Z]{0,5}$/.test(val)) {
-			setCurrentGuess(val);
+	useEffect(() => {
+		if (!hasMounted.current) {
+			hasMounted.current = true;
+			return; // prevent confetti on first mount
 		}
-	};
+		
+		const isNowCorrect = previousGuess === solution;
+		
+		if (isNowCorrect && !hasPlayedConfetti) {
+			const duration = 3000;
+			const end = Date.now() + duration;
+			
+			(function frame() {
+				confetti({
+					particleCount: 50,
+					startVelocity: 30,
+					spread: 360,
+					ticks: 100,
+					gravity: 1,
+					origin: {
+						x: Math.random(),
+						y: Math.random() * 0.5,
+					},
+				});
+				if (Date.now() < end) {
+					requestAnimationFrame(frame);
+				}
+			})();
+			setHasPlayedConfetti(true);
+			setHasPlayedConfetti(false)
+		}
+		
+	}, [previousGuess, solution, hasPlayedConfetti]);
+	
 	
 	return (
-		<div className="h-100vh w-100vw overflow-clip p-2">
-			<Link href="/help" className="py-1 px-2 bg-amber-300 rounded fixed right-[1rem] top-[1rem]  grid place-items-center">RULES</Link>
-			<Title classname="absolute top-[4rem] left-[50%] -translate-x-[50%] text-6xl md:top-[1rem]" />
-			{guesses.filter(guess => guess !== null).length > 0 && (
-				<button onClick={restartGame} className="py-1 px-2 bg-red-300 rounded fixed left-[1rem] top-[1rem] grid place-items-center">Restart</button>
-			)}
-			
-			<div className="w-full text-center my-4">
-				<input
-					ref={inputRef}
-					type="text"
-					inputMode="text"
-					autoComplete="off"
-					autoCorrect="off"
-					spellCheck="false"
-					className="absolute opacity-0 pointer-events-none w-0 h-0"
-					value={currentGuess}
-					onInput={handleInput}
-				/>
-			</div>
-			
-			
-			{/*hint part*/}
-			<AnimatePresence>
-				{showHint && hint && (
-					<motion.div
-						initial={{ x: "-100%", opacity: 0 }}
-						animate={{ x: "-50%", opacity: 1 }}
-						exit={{ x: "100%", opacity: 0 }}
-						transition={{ duration: 0.8 }}
-						className="absolute top-[20rem] left-1/2 px-4 py-2 bg-yellow-100 text-yellow-800 font-semibold rounded shadow-md z-2"
-					>
-						{hint}
-					</motion.div>
-				)}
-			</AnimatePresence>
-			
-			
-			
-			
-			<div className="flex flex-col items-center gap-4">
-				<div className="relative board flex gap-[5px] flex-col">
-					{guesses.map((guess, idx) => {
-						const isCurrentGuess = idx === guesses.findIndex((val) => val == null);
-						return isCurrentGuess && !gameOver? (
-								<div key={idx} className="flex items-center relative">
-									<div className="text-2xl -left-[2rem] top-[1rem] absolute animate-bounce text-amber-400">👉</div>
-									<div className={clsx("flex items-center gap-2")}>
-										<Line guess={isCurrentGuess ? currentGuess : guess ?? ""} isFinal={!isCurrentGuess && guess !== null} solution={solution}/>
-									</div>
-								</div>
-							) :
-							(
-								<div key={idx} className={clsx("flex items-center gap-2")}>
-									<Line guess={isCurrentGuess ? currentGuess : guess ?? ""} isFinal={!isCurrentGuess && guess !== null} solution={solution}/>
-								</div>
-							)
-					})}
+		page === "game"?
+			(
+				<div className="h-100vh w-100vw overflow-clip p-2">
+					<button onClick={()=>setPage("help")} className="py-1 px-2 bg-amber-400 text-black rounded fixed right-[1rem] top-[1rem]  grid place-items-center">RULES</button>
+					<Title classname="absolute top-[4rem] left-[50%] -translate-x-[50%] text-6xl md:top-[1rem]" />
+					{(guesses.filter(guess => guess !== null).length > 0 && !gameOver) && (
+						<button onClick={restartGame} className="py-1 px-2 bg-amber-400 rounded text-black fixed left-[1rem] top-[1rem] grid place-items-center">RESTART</button>
+					)}
+					
+					{/*hint part*/
+						!gameOver &&
+						<AnimatePresence>
+							{showHint && hint && (
+								<motion.div
+									initial={{ x: "-100%", opacity: 0 }}
+									animate={{ x: "-50%", opacity: 1 }}
+									exit={{ x: "100%", opacity: 0 }}
+									transition={{ duration: 0.8 }}
+									className="absolute top-[15rem] left-1/2 px-4 py-2 bg-yellow-100 text-yellow-800 font-semibold rounded shadow-md z-2"
+								>
+									{hint}
+								</motion.div>
+							)}
+						</AnimatePresence>
+					}
+					
+					<div className="flex flex-col items-center gap-4">
+						<div className="relative board flex gap-[5px] flex-col">
+							{guesses.map((guess, idx) => {
+								const isCurrentGuess = idx === guesses.findIndex((val) => val == null);
+								return isCurrentGuess && !gameOver? (
+										<div key={idx} className="flex items-center relative">
+											<div className="text-2xl -left-[2rem] top-[1rem] absolute animate-bounce text-amber-400">👉</div>
+											<div className={clsx("flex items-center gap-2")}>
+												<Line guess={isCurrentGuess ? currentGuess : guess ?? ""} isFinal={!isCurrentGuess && guess !== null} solution={solution}/>
+											</div>
+										</div>
+									) :
+									(
+										<div key={idx} className={clsx("flex items-center gap-2")}>
+											<Line guess={isCurrentGuess ? currentGuess : guess ?? ""} isFinal={!isCurrentGuess && guess !== null} solution={solution}/>
+										</div>
+									)
+							})}
+						</div>
+						
+						{!gameOver && (
+							<Keyboard handleKey={handleKey}/>
+						)}
+						
+						
+						{gameOver && (
+							<PlayAgain solution={solution} previousGuess={previousGuess} restartGame={restartGame}/>
+						)}
+					</div>
+					<Footer/>
+					
 				</div>
 				
-				{!gameOver && (
-					<div className="keyboard mt-6 grid gap-2">
-						{["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"].map((row, rowIndex) => (
-							<div key={rowIndex} className="flex justify-center gap-1">
-								{row.split("").map((char) => (
-									<button
-										key={char}
-										onClick={() => handleKey(char)}
-										className={clsx("px-[2.5vw] py-2 bg-gray-300 rounded text-black hover:bg-gray-300")}
-									>
-										{char}
-									</button>
-								))}
-								{rowIndex === 2 && (
-									<>
-										<button
-											onClick={() => handleKey("DEL")}
-											className="px-2 py-2 bg-red-300 rounded text-black hover:bg-red-400"
-										>
-											DEL
-										</button>
-										<button
-											onClick={() => handleKey("ENTER")}
-											className="px-1 py-2 bg-green-300 rounded text-black hover:bg-green-400"
-										>
-											ENTER
-										</button>
-									</>
-								)}
-							</div>
-						))}
-					</div>
-				)}
-				
-				
-				{gameOver && (
-					<div className="text-center mt-4">
-						<p className="text-lg font-semibold text-green-500">
-							{solution === previousGuess
-								? "🎉 You got it!"
-								: `❌ Game Over. The word was: ${solution}`}
-						</p>
-						<button
-							onClick={restartGame}
-							className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-						>
-							Play Again
-						</button>
-					</div>
-				)}
-			</div>
-		</div>
+			)
+			:
+			<Help setPage={setPage}/>
+		
+		
 	);
+	
 };
 
 export default Page;

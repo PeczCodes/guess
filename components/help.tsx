@@ -1,10 +1,17 @@
 import React from 'react';
-import Link from "next/link";
 
-const Page = () => {
+
+
+type pages = "game" | "help";
+
+type HelpProps = {
+	setPage: React.Dispatch<React.SetStateAction<pages>>;
+};
+
+const Help: React.FC<HelpProps> = ({ setPage }) => {
 	return (
 		<div className="p-5">
-			<Link href="/" className="py-1 px-2 bg-gray-300 rounded fixed right-[1rem] top-[1rem] hover:bg-amber-300 w-[4rem] grid place-items-center">PLAY</Link>
+			<button onClick={()=> setPage("game")} className="py-1 px-2 bg-amber-300 text-black rounded fixed right-[1rem] top-[1rem] w-[4rem] grid place-items-center">PLAY</button>
 			<div className="grid gap-4">
 				<div>
 					<h2 className="text-2xl font-bold mb-2">🎮 How to Play</h2>
@@ -66,4 +73,4 @@ const Page = () => {
 	);
 };
 
-export default Page;
+export default Help;
