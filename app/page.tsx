@@ -36,7 +36,6 @@ const Page = () => {
 	const [hint, setHint] = useState<string>("");
 	const [showHint, setShowHint] = useState<boolean>(false);
 	const [hasFetchedHint, setHasFetchedHint] = useState(false);
-	const prevGuess = usePrevious(previousGuess);
 	const hasMounted = useRef(false);
 	const [hasPlayedConfetti, setHasPlayedConfetti] = useState(false);
 	
