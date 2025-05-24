@@ -187,7 +187,7 @@ const Page = () => {
 			(
 				<div className="h-100vh w-100vw overflow-clip p-2">
 					<button onClick={()=>setPage("help")} className="py-1 px-2 bg-amber-400 text-black rounded fixed right-[1rem] top-[1rem]  grid place-items-center">RULES</button>
-					<Title classname="absolute top-[4rem] left-[50%] -translate-x-[50%] text-6xl md:top-[1rem]" />
+					<Title classname="absolute top-[10vw] left-[50%] -translate-x-[50%] text-6xl md:top-[1rem]" />
 					{(guesses.filter(guess => guess !== null).length > 0 && !gameOver) && (
 						<button onClick={restartGame} className="py-1 px-2 bg-amber-400 rounded text-black fixed left-[1rem] top-[1rem] grid place-items-center">RESTART</button>
 					)}
