@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --accent: #fdcc63;
+  --purple: #e050a6
 }
 
 @theme inline {
@@ -34,4 +36,49 @@ button:active {
 }
 button:hover {
   scale: 1.05;
+}
+.intro {
+  font-weight: bold;
+  font-size: clamp(2vw, 18vw, 30rem);
+  background-image: url('/intro.png');
+  background-size: cover;
+  width: 100vw;
+  background-position: center;
+  -webkit-background-clip: text;   /* Clips image to text */
+  color: transparent;              /* Makes text fill see-through */
+  -webkit-text-fill-color: transparent;
+}
+
+.title {
+  font-weight: bold;
+  background-image: url('/intro.png');
+  background-size: cover;
+  width: 100vw;
+  background-position: center;
+  -webkit-background-clip: text;   /* Clips image to text */
+  color: transparent;              /* Makes text fill see-through */
+  -webkit-text-fill-color: transparent;
+}
+
+.typing-container {
+  font-size: clamp(2vw, 7vw, 5rem);
+  display: flex;
+  justify-content: center ;
+}
+
+.typing-letter {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: type-in 0.4s ease forwards;
+}
+
+@keyframes type-in {
+  to {
+    opacity: 1;
+    transform: translateY(-1rem);
+  }
+}
+
+* {
+  /*border: 1px solid crimson;*/
 }

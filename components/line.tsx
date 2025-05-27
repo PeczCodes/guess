@@ -10,11 +10,11 @@ export function Line({guess, isFinal, solution}: { guess: string; isFinal: boole
 		
 		if (isFinal) {
 			if (char === solution[i]) {
-				className = "bg-green-500 text-white";
+				className = "bg-green-500 text-black";
 			} else if (solution.includes(char)) {
 				className = "bg-yellow-400 text-black";
 			} else {
-				className = "bg-red-600 text-white";
+				className = "bg-red-600 text-black";
 			}
 		}
 		

@@ -1,8 +1,9 @@
 import React from 'react';
+import {pages} from "@/app/page";
+import {RefreshCcw} from "lucide-react";
 
 
 
-type pages = "game" | "help";
 
 type HelpProps = {
 	setPage: React.Dispatch<React.SetStateAction<pages>>;
@@ -11,7 +12,7 @@ type HelpProps = {
 const Help: React.FC<HelpProps> = ({ setPage }) => {
 	return (
 		<div className="p-5">
-			<button onClick={()=> setPage("game")} className="py-1 px-2 bg-amber-300 text-black rounded fixed right-[1rem] top-[1rem] w-[4rem] grid place-items-center">PLAY</button>
+			<button onClick={()=> setPage("game")} className="py-1 px-2 max-sm:text-sm text-[var(--purple)] hover:bg-[var(--purple)] hover:text-black rounded fixed right-[1rem] top-[1rem] outline-1 outline-[var(--purple)] grid place-items-center">PLAY</button>
 			<div className="grid gap-4">
 				<div>
 					<h2 className="text-2xl font-bold mb-2">🎮 How to Play</h2>
@@ -49,7 +50,7 @@ const Help: React.FC<HelpProps> = ({ setPage }) => {
 					<p>
 						After a round ends (win or lose), a{" "}
 						<span className="font-mono bg-amber-300 py-1 px-2 rounded dark:text-black">Play Again</span>{" "}
-						button appears. Click it to play a new word! or click the <span className="font-mono bg-amber-300 py-1 px-2 rounded dark:text-black">Restart</span>
+						button appears. Click it to play a new word! or click the <RefreshCcw className="inline-flex bg-amber-300 py-1 px-1 size-[2rem] rounded dark:text-black" />
 						 button to restart before the round ends if you have given up 😉
 					</p>
 				</div>

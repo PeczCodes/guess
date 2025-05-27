@@ -1,7 +1,6 @@
 "use client";
 import React, {useEffect, useRef, useState} from "react";
 import { Line } from "@/components/line";
-import clsx from "clsx";
 import Title from "@/components/title";
 import { motion, AnimatePresence } from "framer-motion";
 import Help from "@/components/help";
@@ -9,16 +8,18 @@ import confetti from 'canvas-confetti';
 import Keyboard from "@/components/keyboard";
 import PlayAgain from "@/components/playAgain";
 import Footer from "@/components/footer";
+import FirstPage from "@/components/firstPage";
+import {RefreshCcw} from "lucide-react";
 
 
 const api = "/api";
 const wordLength = 5;
 const maxGuesses = 6;
 
-type pages = "game" | "help"
+export type pages = "first" | "onboarding" | "game" | "help"
 
 const Page = () => {
-	const [page, setPage] = useState<pages>("game");
+	const [page, setPage] = useState<pages>("first");
 	const [solution, setSolution] = useState<string>("");
 	const [guesses, setGuesses] = useState<(string | null)[]>(Array(maxGuesses).fill(null));
 	const [currentGuess, setCurrentGuess] = useState<string>("");
@@ -49,6 +50,16 @@ const Page = () => {
 	useEffect(() => {
 		fetchWord()
 	}, []);
+	
+	useEffect(() => {
+		if (page === "first") {
+			const timer = setTimeout(() => {
+				setPage("game");
+			}, 5000); // 5 seconds
+			
+			return () => clearTimeout(timer);
+		}
+	}, [page]);
 	
 	useEffect(() => {
 		const lastGuessIndex = maxGuesses - 2;
@@ -181,74 +192,93 @@ const Page = () => {
 		
 	}, [previousGuess, solution, hasPlayedConfetti]);
 	
-	
+		
+		
 	return (
-		page === "game"?
-			(
-				<div className="h-100vh w-100vw overflow-clip p-2">
-					<button onClick={()=>setPage("help")} className="py-1 px-2 bg-amber-400 text-black rounded fixed right-[1rem] top-[1rem]  grid place-items-center">RULES</button>
-					<Title classname="absolute top-[10vw] left-[50%] -translate-x-[50%] text-6xl md:top-[1rem]" />
-					{(guesses.filter(guess => guess !== null).length > 0 && !gameOver) && (
-						<button onClick={restartGame} className="py-1 px-2 bg-amber-400 rounded text-black fixed left-[1rem] top-[1rem] grid place-items-center">RESTART</button>
+		<AnimatePresence mode="wait">
+			{page === "first" && (
+				<motion.div
+					key="first"
+					initial={{opacity: 1}}
+					animate={{opacity: 1}}
+					exit={{opacity: 0}}
+					transition={{duration: 1}}
+					className="absolute top-0 left-0 w-full h-full z-50"
+				>
+					<FirstPage/>
+				</motion.div>
+			)}
+			
+			{page === "game" && (
+				<motion.div
+					key="game"
+					initial={{opacity: 0}}
+					animate={{opacity: 1}}
+					exit={{opacity: 0}}
+					transition={{duration: 0}}
+					className="h-100vh w-100vw"
+				>
+					<button
+						onClick={() => setPage("help")}
+						className="py-1 px-2 max-sm:text-sm text-[var(--purple)] hover:bg-[var(--purple)] hover:text-black rounded fixed right-[1rem] top-[1rem] outline-1 outline-[var(--purple)]  grid place-items-center"
+					>
+						RULES
+					</button>
+					<Title classname="title grid justify-center absolute top-[10vw] left-0 text-6xl md:top-[1rem]"/>
+					{(guesses.filter((guess) => guess !== null).length > 0 && !gameOver) && (
+						 <RefreshCcw onClick={restartGame} className="text-[var(--purple)] cursor-pointer md:size-[2rem] fixed left-[1rem] top-[1.3rem]"/>
 					)}
 					
-					{/*hint part*/
-						!gameOver &&
-						<AnimatePresence>
-							{showHint && hint && (
-								<motion.div
-									initial={{ x: "-100%", opacity: 0 }}
-									animate={{ x: "-50%", opacity: 1 }}
-									exit={{ x: "100%", opacity: 0 }}
-									transition={{ duration: 0.8 }}
-									className="absolute top-[15rem] left-1/2 px-4 py-2 bg-yellow-100 text-yellow-800 font-semibold rounded shadow-md z-2"
-								>
-									{hint}
-								</motion.div>
-							)}
-						</AnimatePresence>
-					}
+					<AnimatePresence>
+						{!gameOver && showHint && hint && (
+							<motion.div
+								initial={{x: "-100%", opacity: 0}}
+								animate={{x: "-50%", opacity: 1}}
+								exit={{x: "100%", opacity: 0}}
+								transition={{duration: 0.8}}
+								className="absolute top-[15rem] left-1/2 px-4 py-2 bg-yellow-100 text-yellow-800 font-semibold rounded shadow-md z-2"
+							>
+								{hint}
+							</motion.div>
+						)}
+					</AnimatePresence>
 					
 					<div className="flex flex-col items-center gap-4">
 						<div className="relative board flex gap-[5px] flex-col">
 							{guesses.map((guess, idx) => {
 								const isCurrentGuess = idx === guesses.findIndex((val) => val == null);
-								return isCurrentGuess && !gameOver? (
-										<div key={idx} className="flex items-center relative">
-											<div className="text-2xl -left-[2rem] top-[1rem] absolute animate-bounce text-amber-400">👉</div>
-											<div className={clsx("flex items-center gap-2")}>
-												<Line guess={isCurrentGuess ? currentGuess : guess ?? ""} isFinal={!isCurrentGuess && guess !== null} solution={solution}/>
-											</div>
-										</div>
-									) :
-									(
-										<div key={idx} className={clsx("flex items-center gap-2")}>
-											<Line guess={isCurrentGuess ? currentGuess : guess ?? ""} isFinal={!isCurrentGuess && guess !== null} solution={solution}/>
-										</div>
-									)
+								return (
+									<div key={idx} className="flex items-center gap-2 relative">
+										{isCurrentGuess && !gameOver && (
+											<div
+												className="text-2xl -left-[2rem] top-[1rem] absolute animate-bounce text-amber-400">👉</div>
+										)}
+										<Line
+											guess={isCurrentGuess ? currentGuess : guess ?? ""}
+											isFinal={!isCurrentGuess && guess !== null}
+											solution={solution}
+										/>
+									</div>
+								);
 							})}
 						</div>
 						
-						{!gameOver && (
-							<Keyboard handleKey={handleKey}/>
-						)}
-						
+						{!gameOver && <Keyboard handleKey={handleKey}/>}
 						
 						{gameOver && (
-							<PlayAgain solution={solution} previousGuess={previousGuess} restartGame={restartGame}/>
+							<PlayAgain
+								solution={solution}
+								previousGuess={previousGuess}
+								restartGame={restartGame}
+							/>
 						)}
 					</div>
-					<Footer/>
-					
-				</div>
-				
-			)
-			:
-			<Help setPage={setPage}/>
-		
-		
+				</motion.div>
+			)}
+			
+			{page === "help" && <Help setPage={setPage}/>}
+		</AnimatePresence>
 	);
-	
-};
+}
 
 export default Page;

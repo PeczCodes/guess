@@ -10,7 +10,7 @@ const Keyboard = ({handleKey}: { handleKey: (key: string) => void; }) => {
 						<button
 							key={char}
 							onClick={() => handleKey(char)}
-							className={clsx("px-[2.5vw] py-2 outline-1 bg-amber-300 rounded border-0 border-black text-black hover:bg-gray-300")}
+							className={clsx(char === "I" && "px-[3vw]", "px-[2.6vw] py-2 outline-1 bg-[var(--accent)] rounded border-0 border-black text-black hover:bg-gray-300")}
 						>
 							{char}
 						</button>
@@ -19,13 +19,13 @@ const Keyboard = ({handleKey}: { handleKey: (key: string) => void; }) => {
 						<>
 							<button
 								onClick={() => handleKey("DEL")}
-								className="px-2 py-2 bg-red-300 rounded text-black hover:bg-red-400"
+								className="px-2 py-2 bg-red-500 rounded text-black"
 							>
 								DEL
 							</button>
 							<button
 								onClick={() => handleKey("ENTER")}
-								className="px-1 py-2 bg-green-300 rounded text-black hover:bg-green-400"
+								className="px-1 py-2 bg-[var(--purple)] rounded text-black"
 							>
 								ENTER
 							</button>
