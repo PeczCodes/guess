@@ -7,7 +7,6 @@ import Help from "@/components/help";
 import confetti from 'canvas-confetti';
 import Keyboard from "@/components/keyboard";
 import PlayAgain from "@/components/playAgain";
-import Footer from "@/components/footer";
 import FirstPage from "@/components/firstPage";
 import {RefreshCcw} from "lucide-react";
 
