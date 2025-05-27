@@ -40,7 +40,7 @@ export async function POST(req: Request){
 			messages: [
 				{
 					"role": "user",
-					"content": `I'm playing a wordle game. The solution is '${solution}'. Give me a brief sentence that hints the player to the solution, no side talks`
+					"content": `I'm playing a wordle game. The solution is '${solution}'. Give me a brief sentence that hints the player to the solution, no side talks.`
 				}
 			],
 			
