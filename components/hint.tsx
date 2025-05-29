@@ -26,7 +26,7 @@ const Hint = ({ setDisabled, disabled }: HelpProps) => {
 				<div className="space-y-6">
 					<div>
 						<h3 className="text-lg font-semibold text-white mb-2">Rules</h3>
-						<ul className="text-gray-300 space-y-2 list-disc list-inside">
+						<ul className="text-white space-y-2 list-disc list-inside">
 							<li>You have 6 tries to guess a 5-letter word</li>
 							<li>Hit <span className="bg-[var(--purple)] p-1 rounded">ENTER</span> to submit your guess</li>
 							<li>After each guess, colors will show how close you were</li>
@@ -40,24 +40,24 @@ const Hint = ({ setDisabled, disabled }: HelpProps) => {
 								<div className="w-10 h-10 bg-green-500 rounded flex items-center justify-center text-white font-bold">
 									A
 								</div>
-								<span className="text-gray-300">Letter is correct and in the right spot</span>
+								<span className="text-white">Letter is correct and in the right spot</span>
 							</div>
 							<div className="flex items-center gap-3">
 								<div className="w-10 h-10 bg-yellow-500 rounded flex items-center justify-center text-white font-bold">
 									B
 								</div>
-								<span className="text-gray-300">Letter is in the word but in wrong spot</span>
+								<span className="text-white">Letter is in the word but in wrong spot</span>
 							</div>
 							<div className="flex items-center gap-3">
 								<div className="w-10 h-10 bg-red-500 rounded flex items-center justify-center text-white font-bold">
 									C
 								</div>
-								<span className="text-gray-300">Letter is not in word</span>
+								<span className="text-white">Letter is not in word</span>
 							</div>
 						</div>
 					</div>
 					
-					<div className="text-gray-300 mt-6">
+					<div className="text-white mt-6">
 						<h3 className="text-lg font-semibold text-white mb-2">Tips</h3>
 						<ul className="space-y-2 list-disc list-inside">
 							<li>You get a hint after your fourth try</li>

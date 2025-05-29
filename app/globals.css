@@ -34,9 +34,7 @@ button {
 button:active {
   filter: brightness(0.8);
 }
-button:hover {
-  scale: 1.05;
-}
+
 .intro {
   font-weight: bold;
   font-size: clamp(2vw, 18vw, 30rem);
@@ -77,8 +75,4 @@ button:hover {
     opacity: 1;
     transform: translateY(-1rem);
   }
-}
-
-* {
-  /*border: 1px solid crimson;*/
 }

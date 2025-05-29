@@ -16,6 +16,10 @@ const api = "/api";
 const wordLength = 5;
 const maxGuesses = 6;
 
+function logMyGitHub() {
+	console.log("%cGitHub → https://github.com/PeczCodes", "color: #8b5cf6; font-weight: bold;");
+}
+
 export type pages = "first" | "onboarding" | "game" | "help"
 
 const Page = () => {
@@ -49,7 +53,8 @@ const Page = () => {
 	
 	
 	useEffect(() => {
-		fetchWord().then()
+		fetchWord().then(()=> logMyGitHub())
+		
 	}, []);
 	
 	useEffect(() => {
