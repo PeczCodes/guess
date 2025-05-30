@@ -65,8 +65,7 @@ A modern, interactive word guessing game built with Next.js and TypeScript, feat
 
 ## ⚙️ API Endpoints
 
-- `GET /api` - Fetches random words
-- `POST /api/solution` - Submits solution 
+- `GET /api` - Fetches random words 
 - `POST /api` - Fetches hints
 
 ## 🎨 Customization
@@ -90,9 +89,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📧 Contact
 
-Your Name - [@YourTwitter](https://twitter.com/YourTwitter)
-
-Project Link: [https://github.com/YourUsername/your-repo-name](https://github.com/YourUsername/your-repo-name)
+Project Link: [https://guess.vercel.app](https://guess-lime.vercel.app/)
 
 ## 🙏 Acknowledgments
 
