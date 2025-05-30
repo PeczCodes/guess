@@ -2,9 +2,9 @@
 
 A modern, interactive word guessing game built with Next.js and TypeScript, featuring animations, hints, and a sleek user interface.
 
-![Game Preview]
-(./home.png)
-(./game.png)
+![Game Preview](./public/home.png)
+![In-game Screenshot](./public/game.png)
+
 
 
 ## 🎮 Features
