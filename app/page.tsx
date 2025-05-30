@@ -7,7 +7,7 @@ import confetti from 'canvas-confetti';
 import Keyboard from "@/components/keyboard";
 import PlayAgain from "@/components/playAgain";
 import FirstPage from "@/components/firstPage";
-import {CircleHelp, RefreshCcw} from "lucide-react";
+import {CircleHelp, RefreshCcw, X} from "lucide-react";
 import clsx from "clsx";
 import Hint from "@/components/hint";
 
@@ -112,7 +112,7 @@ const Page = () => {
 				setShowHint(false);
 				// clean hint text after exit
 				setTimeout(() => setHint(""), 800); // match Framer's exit duration
-			}, 5000);
+			}, 8000);
 			
 			return () => clearTimeout(timer);
 		} catch (error) {
@@ -225,26 +225,33 @@ const Page = () => {
 						animate={{opacity: 1}}
 						exit={{opacity: 0}}
 						transition={{duration: .2}}
-						className={clsx(disabled? "pointer-events-none touch-none": "", "h-100vh w-100vw")}
+						className={clsx(disabled? "pointer-events-none touch-none": "", "h-100vh w-100vw fixed")}
 					>
-						<button onClick={() => setDisabled(true)} className="z-12 cursor-pointer py-1 px-2 max-sm:text-sm text-[var(--purple)] fixed right-[1rem] top-[1rem]  grid place-items-center">
-							<CircleHelp />
-						</button>
-						<Title classname="title grid justify-center absolute top-[10vw] left-0 text-6xl md:top-[.5rem]"/>
+						<CircleHelp onClick={() => setDisabled(true)} className="text-[var(--purple)] z-12 cursor-pointer md:size-[2rem] fixed right-4 top-4"/>
+						<Title classname="title grid justify-center fixed top-[10vw] left-0 text-6xl md:top-[.5rem]"/>
 						{(guesses.filter((guess) => guess !== null).length > 0 && !gameOver) && (
-							<RefreshCcw onClick={restartGame} className="text-[var(--purple)] cursor-pointer md:size-[2rem] fixed left-[1rem] top-[1.3rem]"/>
+							<RefreshCcw onClick={restartGame} className="text-[var(--purple)] cursor-pointer md:size-[2rem] fixed left-4 top-4"/>
 						)}
 						
 						<AnimatePresence>
 							{!gameOver && showHint && hint && (
-								<motion.div
-									initial={{x: "-100%", opacity: 0}}
-									animate={{x: "-50%", opacity: 1}}
-									exit={{x: "100%", opacity: 0}}
-									transition={{duration: 0.8}}
-									className="absolute top-[15rem] left-1/2 px-4 py-2 bg-yellow-100 text-yellow-800 font-semibold rounded shadow-md z-2"
-								>
-									{hint}
+								<motion.div initial={{x: "-100%", opacity: 0}} animate={{x: "-50%", opacity: 1}} exit={{x: "100%", opacity: 0}} transition={{duration: 0.8}} className="absolute top-[10%] left-1/2 px-4 py-2 bg-yellow-100 text-yellow-800 font-semibold rounded shadow-md z-2">
+									<X className="size-[1.5rem] absolute -top-6 -right-6 bg-yellow-100 p-1 rounded-full  cursor-pointer" onClick={() => setShowHint(false)}/>
+									<div className="max-sm:w-[70vw] text-center">
+										{hint}
+										<div className="w-full h-1 bg-yellow-200 mt-2 rounded overflow-hidden">
+											<motion.div
+												initial={{ width: "100%" }}
+												animate={{ width: "0%" }}
+												transition={{
+													duration: 8,
+													ease: "linear"
+												}}
+												className="h-full bg-yellow-500"
+											/>
+										</div>
+									</div>
+									
 								</motion.div>
 							)}
 						</AnimatePresence>

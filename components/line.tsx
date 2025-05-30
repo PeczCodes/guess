@@ -10,11 +10,11 @@ export function Line({guess, isFinal, solution}: { guess: string; isFinal: boole
 		
 		if (isFinal) {
 			if (char === solution[i]) {
-				className = "bg-green-500 text-black";
+				className = "bg-green-500 text-black border-0";
 			} else if (solution.includes(char)) {
-				className = "bg-yellow-400 text-black";
+				className = "bg-yellow-400 text-black border-0";
 			} else {
-				className = "bg-red-600 text-black";
+				className = "bg-red-600 text-black border-0";
 			}
 		}
 		
@@ -23,7 +23,7 @@ export function Line({guess, isFinal, solution}: { guess: string; isFinal: boole
 				key={i}
 				className={clsx(
 					className,
-					"w-[13vw] h-[13vw] md:w-[100px] md:h-[100px] rounded-2xl border border-black dark:border-white grid place-items-center text-3xl uppercase"
+					"w-[13vw] h-[13vw] md:w-[100px] md:h-[100px] rounded border border-black dark:border-white grid place-items-center text-3xl uppercase"
 				)}
 			>
 				{char}

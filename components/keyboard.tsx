@@ -25,7 +25,7 @@ const Keyboard = ({handleKey}: { handleKey: (key: string) => void; }) => {
 							</button>
 							<button
 								onClick={() => handleKey("ENTER")}
-								className="px-1 py-2 bg-[var(--purple)] rounded text-black"
+								className="px-1 py-2 bg-fuchsia-500 rounded text-black"
 							>
 								ENTER
 							</button>

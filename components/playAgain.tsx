@@ -1,16 +1,16 @@
 import React from 'react';
+import {randomFailureMessage, randomSuccessMessage} from "@/app/utils";
 
 const PlayAgain = ({solution, previousGuess, restartGame}: { solution: string; previousGuess: string; restartGame: () => void;}) => {
 	return (
 		<div className="text-center mt-4">
-			<p className="text-lg font-semibold text-green-500">
-				{solution === previousGuess
-					? "🎉 You got it!"
-					: `❌ Game Over. The word was: ${solution}`}
-			</p>
+			{solution === previousGuess
+				? <p className="text-green-500">{randomSuccessMessage}</p>
+				: <p className="text-red-500">{randomFailureMessage(solution)}</p>
+			}
 			<button
 				onClick={restartGame}
-				className="mt-2 px-4 py-2 bg-amber-400 text-black rounded transition"
+				className="mt-2 px-4 py-2 bg-[var(--purple)] text-black rounded transition"
 			>
 				Play Again
 			</button>

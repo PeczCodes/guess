@@ -34,19 +34,20 @@ export async function GET(){
 export async function POST(req: Request){
 	try {
 		const solution = await req.json()
-		
+
 		const completion = await openai.chat.completions.create({
 			model: "meta-llama/llama-3.3-8b-instruct:free",
 			messages: [
 				{
 					"role": "user",
-					"content": `I'm playing a wordle game. The solution is '${solution}'. Give me a brief sentence that hints the player to the solution, no side talks.`
+					"content": `You are a helpful assistant for a word-guessing game. The secret word is: "${solution}".Generate a very brief, yet concise, useful hint to help the player guess the word. Get straight to the point, no side talks. The hint should not reveal the word directly but should provide clues meaning, or usage. Keep the hints friendly and encouraging.`
 				}
 			],
-			
+			temperature: 0.7,
 		});
 		return NextResponse.json({message: completion.choices[0].message.content})
 	}
+	
 	catch(error){
 		return NextResponse.json({
 			message: 'Failed to fetch words', error,
