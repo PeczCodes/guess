@@ -217,7 +217,7 @@ const Page = () => {
 			)}
 			
 			{page === "game" && (
-				<>
+				<div className="h-100vh w-100vw fixed">
 					<Hint setDisabled={setDisabled} disabled={disabled} />
 					<motion.div
 						key="game"
@@ -225,7 +225,7 @@ const Page = () => {
 						animate={{opacity: 1}}
 						exit={{opacity: 0}}
 						transition={{duration: .2}}
-						className={clsx(disabled? "pointer-events-none touch-none": "", "h-100vh w-100vw fixed")}
+						className={clsx(disabled? "pointer-events-none touch-none": "")}
 					>
 						<CircleHelp onClick={() => setDisabled(true)} className="text-[var(--purple)] z-12 cursor-pointer md:size-[2rem] fixed right-4 top-4"/>
 						<Title classname="title grid justify-center fixed top-[10vw] left-0 text-6xl md:top-[.5rem]"/>
@@ -287,7 +287,7 @@ const Page = () => {
 							)}
 						</div>
 					</motion.div>
-				</>
+				</div>
 			)}
 			
 		</AnimatePresence>

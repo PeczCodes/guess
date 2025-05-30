@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Guess
 
-## Getting Started
+A modern, interactive word guessing game built with Next.js and TypeScript, featuring animations, hints, and a sleek user interface.
 
-First, run the development server:
+![Game Preview]
+(./home.png)
+(./game.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎮 Features
 
-You can start editing the page by modifying `app/help.tsx`. The page auto-updates as you edit the file.
+- 🎯 Classic word guessing gameplay with 6 attempts
+- ✨ Animated transitions and interactions using Framer Motion
+- 💡 Smart hint system that activates on the second-to-last guess
+- ⌨️ Virtual keyboard with full keyboard support
+- 🎊 Victory celebration with confetti effects
+- 📱 Responsive design for both desktop and mobile
+- 🎨 Clean and modern UI with smooth animations
+- 🔄 Restart game functionality
+- 👋 Welcoming first-page animation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Built With
 
-## Learn More
+- [React](https://reactjs.org/) - Frontend framework
+- [TypeScript](https://www.typescriptlang.org/) - Type safety and enhanced development experience
+- [Next.js](https://nextjs.org/) - React framework for production
+- [Framer Motion](https://www.framer.com/motion/) - Animation library
+- [Canvas Confetti](https://www.npmjs.com/package/canvas-confetti) - Celebration effects
+- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [Lucide React](https://lucide.dev/) - Icons
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Getting Started
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Prerequisites
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Node.js (v14 or higher)
+- npm
 
-## Deploy on Vercel
+### Installation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Clone the repository
+2. Install dependencies (npm install)
+3. Start the development server
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🎯 How to Play
+
+1. The game starts with a welcome animation
+2. Try to guess the 5-letter word
+3. After each guess:
+    - Green: Letter is correct and in the right position
+    - Yellow: Letter is in the word but in wrong position
+    - Gray: Letter is not in the word
+4. You have 6 attempts to guess the word
+5. A hint will appear before your last attempt
+6. Win by guessing the word correctly!
+
+## 🔧 Game Controls
+
+- Type letters using your keyboard or the on-screen keyboard
+- Press Enter/click Enter to submit your guess
+- Press Backspace/click DEL to delete letters
+- Click the refresh icon to start a new game
+- Click the help icon for assistance
+
+## ⚙️ API Endpoints
+
+- `GET /api` - Fetches random words
+- `POST /api/solution` - Submits solution 
+- `POST /api` - Fetches hints
+
+## 🎨 Customization
+
+The game includes several customizable features:
+- Word length (currently set to 5)
+- Maximum guesses (currently set to 6)
+- Hint timing
+- Animation durations
+- Color schemes (via Tailwind classes)
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📧 Contact
+
+Your Name - [@YourTwitter](https://twitter.com/YourTwitter)
+
+Project Link: [https://github.com/YourUsername/your-repo-name](https://github.com/YourUsername/your-repo-name)
+
+## 🙏 Acknowledgments
+
+- Inspired by the original Wordle game
+- Thanks to all the open-source libraries used in this project
