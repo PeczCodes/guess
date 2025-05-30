@@ -217,7 +217,7 @@ const Page = () => {
 			)}
 			
 			{page === "game" && (
-				<div className="h-[100vh] w-[100vw] fixed">
+				<div className="h-[100vh] w-[100vw] fixed grid place-items-center">
 					<Hint setDisabled={setDisabled} disabled={disabled} />
 					<motion.div
 						key="game"
